@@ -1,12 +1,13 @@
-const menu = [
+
+const foods = [
   {
     id: 1,
-    title: "Tteokbokki",
-    category: "Korea",
+    title: "Turkish Kebab",
+    category: "Turkish",
     price: 10.99,
     img:
-      "https://twoplaidaprons.com/wp-content/uploads/2020/09/tteokbokki-top-down-view-of-tteokbokki-in-a-bowl-500x500.jpg",
-    desc: `Spicy rice cakes, serving with fish cake.`,
+      "https://img.acunn.com/foto/1200x675/uploads/icerikler/2020/10/10/adana-kebap-tarifi15839585245f820001272d7.jpg",
+    desc: `Best of the meal.`,
   },
   {
     id: 2,
@@ -81,3 +82,70 @@ const menu = [
     desc: `Red bean paste dessert, serving with honey.`,
   },
 ];
+const section = document.querySelector(".section-center");
+const btnContainer = document.querySelector(".btn-container");
+
+const categories = foods.reduce(
+  
+  (values, item) => {
+    if (!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values;
+  },
+  ["All"]
+);
+
+const categoryList = () => {
+  const categoryButtons = categories
+    .map((category) => {
+      return `<button class="btn btn-outline-dark btn-item" data-id=${category}>${category}</button>`;
+    })
+    .join(""); // kategoler arasındaki virgülleri kaldırmak için join() metodu kullanıldı
+
+  btnContainer.innerHTML = categoryButtons;
+  const filterButtons = document.querySelectorAll(".btn-item");
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const category = e.currentTarget.dataset.id;
+      console.log(category);
+      const menuCategory = foods.filter((foodsItems) => {
+        if (foodsItems.category === category) {
+          return foodsItems;
+        }
+      });
+      if (category === "All") {
+        foodsList(foods);
+      } else {
+        foodsList(menuCategory);
+      }
+    });
+  });
+};
+
+const foodsList = (foodsItems) => {
+  let showFoods = foodsItems.map((item) => {
+    return `<div class="menu-items col-lg-6 col-sm-12">
+            <img
+              src=${item.img}
+              alt=${item.title}
+              class="photo"
+            />
+            <div class="menu-info">
+              <div class="menu-title">
+                <h4>${item.title}</h4>
+                <h4 class="price">${item.price}</h4>
+              </div>
+              <div class="foods-text">
+                ${item.desc}
+              </div>
+            </div>
+          </div>
+    `;
+  });
+  showFoods = showFoods.join(""); // kategoler arasındaki virgülleri kaldırmak için join() metodu kullanıldı
+  section.innerHTML = showFoods;
+};
+categoryList();
+foodsList(foods);
